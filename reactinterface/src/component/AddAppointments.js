@@ -1,28 +1,50 @@
 import React, { Component } from 'react';
 import { FaPlus } from 'react-icons/fa';
 
-
-
 class AddAppointments extends Component {
-
-    constractor() {
+    constructor() {
+        super();
         this.state = {
             petName: '',
             ownerName: '',
             aptDate: '',
             aptTime: '',
-            aptNotes: '',
-
-        }
+            aptNotes: ''
+        };
+        this.handleChange = this.handleChange.bind(this);
+        this.handleAdd = this.handleAdd.bind(this);
     }
 
+    handleAdd(e) {
+        e.preventDefault();
+        let tempApt = {
+            petName: this.state.petName,
+            ownerName: this.state.ownerName,
+            aptDate: this.state.aptDate + ' ' + this.state.aptTime,
+            aptNotes: this.state.aptNotes
+        };
+
+        this.props.addAppointment(tempApt);
+
+        this.setState({
+            petName: '',
+            ownerName: '',
+            aptDate: '',
+            aptTime: '',
+            aptNotes: ''
+        });
+        this.props.toggleForm();
+    }
 
     handleChange(e) {
         const target = e.target;
         const value = target.value;
         const name = target.name;
-    }
 
+        this.setState({
+            [name]: value
+        });
+    }
 
     render() {
         return (
@@ -35,13 +57,12 @@ class AddAppointments extends Component {
                 <div
                     className="apt-addheading card-header bg-primary text-white"
                     onClick={this.props.toggleForm}
-
                 >
                     <FaPlus /> Add Appointment
         </div>
 
                 <div className="card-body">
-                    <form id="aptForm" noValidate>
+                    <form id="aptForm" noValidate onSubmit={this.handleAdd}>
                         <div className="form-group form-row">
                             <label
                                 className="col-md-2 col-form-label text-md-right"
@@ -75,7 +96,7 @@ class AddAppointments extends Component {
                                     className="form-control"
                                     name="ownerName"
                                     placeholder="Owner's Name"
-                                    value={this.state.petOwner}
+                                    value={this.state.ownerName}
                                     onChange={this.handleChange}
                                 />
                             </div>
